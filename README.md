@@ -7,8 +7,11 @@ A Linux-inspired operating system that I built with two classmates whilst taking
 * File System Driver
 * System Calls to execute user programs and to provide an interface for user-kernel interaction
 * Round-Robin Scheduling between 3 processes to allow "simultaneous" execution of multiple programs, each process accessible via its own terminal
-* (for extra credit) Device Driver for mouse and CMOS
-* (for extra credit) Status bar displaying currently visible process number and current time (CT) (and some interesting status messages upon mouse clicks!)
+
+Additional Features Implemented for Extra Credit:
+* Device Driver for mouse and CMOS
+* Status bar displaying currently visible process number and current time (CT) (and some interesting status messages upon mouse clicks!)
+* (only partially implemented) Signal Handling
 
 For development and testing, we used QEMU to emulate the processor and various hardware components.
 
