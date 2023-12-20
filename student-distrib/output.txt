@@ -1,0 +1,24 @@
+make: Warning: File `Makefile.dep' has modification time 1.9e+04 s in the future
+gcc  -nostdinc -g  -c -o boot.o boot.S
+gcc  -nostdinc -g  -c -o ass_link_handler.o ass_link_handler.S
+gcc  -nostdinc -g  -c -o paging_ass.o paging_ass.S
+gcc  -nostdinc -g  -c -o x86_desc.o x86_desc.S
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o e_handler.o e_handler.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o filesystem.o filesystem.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o i8259.o i8259.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o idt.o idt.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o kbd.o kbd.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o kernel.o kernel.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o lib.o lib.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o mouse.o mouse.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o paging.o paging.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o pit.o pit.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o rtc.o rtc.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o signals.o signals.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o syscall_functions.o syscall_functions.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o term.o term.c
+gcc -g -Wall -fno-builtin -fno-stack-protector -nostdlib -nostdinc -g  -c -o tests.o tests.c
+rm -f bootimg
+gcc -nostdlib -static boot.o ass_link_handler.o paging_ass.o x86_desc.o e_handler.o filesystem.o i8259.o idt.o kbd.o kernel.o lib.o mouse.o paging.o pit.o rtc.o signals.o syscall_functions.o term.o tests.o -Ttext=0x400000 -o bootimg
+sudo ./debug.sh
+make: warning:  Clock skew detected.  Your build may be incomplete.

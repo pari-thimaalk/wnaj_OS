@@ -1,0 +1,113 @@
+
+WHen adding bug logs, add in format
+-- FILENAME -- PERSON 
+    ERROR
+
+Checkpoint 1:
+-- idt.c -- Pari --
+    When first writing out void add_exception(int exception_number) function, I had this line
+    idt_desc_t curr_entry = idt[exception_number]. Creating a new desc_t object and assigning
+    struct member values in this way causes the kernel to be stuck in a bootloop, possibly because I 
+    wasn't actually updating the idt values in kernel. Fixed this by directly editting idt[exception_number]
+
+-- paging.h -- Aadi --
+    I was including "x86_desc.h" in paging and "paging.h" in x86_desc. Took me 2 hours to figure it
+    out after i asked a CA.
+
+-- paging.c -- Aadi --
+    I (like an idiot) reset the zeroeth and first entries in PD to not present
+    took me a solid half hour of gdbing to realize it
+
+-- tests.c -- Aadi --
+    again like an idiot, i was using int pointers which caused me to fail when derefencing the last few
+    vidmem locations
+    saw a discord post abt 15 mins later and it had the solution of using char pointer *dumbass aadi moment*
+
+-- paging.h -- Aadi --
+    When following OSDev, i forgot to add in the attribute for PAT which messed up my vid mem referencing
+    Another half an hour of gdb saved my ass
+
+-- i8259.c -- George --
+    When setting i8259 init function, I did not mask the master and slave pics with 0xFF before sending in the control words
+    to the respective pics. This caused the kernel to panic and crash upon calling the function.
+
+-- idt.c, i8259.c -- Pari and George --
+    For the longest time we did not notice that the osdev syntax is different from the one used for this course. Consequently, the outb() command parameters had to be switched (i.e. source and destination swap places).
+
+-- kbd.c/h -- George --
+    Erroneous `#define` sent incorrect IRQ number and violated my mental model of invariants. Discovered using paranoid gdb
+
+-- kbd.c -- George --
+    `__attribute__((interrupt))` is meant to mark a function as using `iret` and otherwise having proper interrupt assembly linkage, but this feature is not supported in the ancient version of gcc used by the class VM. Even worse, it doesn't tell you as such — it just silently fails. Caught using `disass` in gdb
+
+
+Checkpoint 2:
+-- filsystem.c -- Aadi and Pari --
+    We were sending a pointer to a dir_entry struct in read data which tried to modify memory at address 0x00 causing a page fault.
+    We fixed it by initializing a dir_entry struct and passing in the memory address of that struct.
+
+-- tests.c -- Aadi and Pari --
+    We initially used PUTS to print out our char buffer which stopped at the first null char for executable files.
+    To fix it we looped through the buffer and used putc.
+
+-- filesystem.c -- Aadi and Pari --
+    We sent in an offset of 4 bytes into read_data initially as we thought we need to account for the length in the inode struct.
+    However, we did not consider that we created an array for the data block numbers which caused us to lose the first 4 bytes of data in the files.
+    Corrected by changing offset to Zero
+-- kbd.c -- George --
+    Using `++` prematurely and `terminal_write`ing one past the end of the array (i.e. always a space)
+
+-- term.c and kbd.c -- George --
+    Because there was no explicit allocation, forgot who was in charge of clearing `input.buffer` (spoiler: no one was clearing it). Changed `terminal_read` to copy `input.buffer` to the caller, and then reset `input`.
+
+-- term.c -- George --
+    Backspace deleted characters, but caused the cursor to move forward. This is because we reused `terminal_write` to write the space in `input.buffer`, but that was treated as a regular space (and the cursor moved forward).
+
+Checkpoint 3:
+-- ass_link_handler.S -- Pari (idiot)
+    I put int 0x80 into the linkage which caused a loop. charles leclerc moment. fixed by deleting, giving me euphoria when i saw 391os. yay
+
+-- syscall_functions.c -- Pari
+    Did not free the pid array, only pcb. thus when executing multiple commands, execute though there are no processes available when there were
+
+-- term.c -- Aadi and George
+    Screen was not scrolling properly as global arrays dont decay into pointers
+    Fixed by creating another pointer that points to the same memory in the function
+
+-- term.c -- Aadi and Pari
+    Could not type into shell as interrupts were disabled
+    set interrupts before typing and cleared after typing to type into shell
+
+-- filesystem.c -- Aadi and Pari
+    Cat initially didnt work as our read returned 0 which is the return value of read_data in the case of EOF instead of nbytes. updated to return nbytes
+    then cat looped infinitely becaue we never returned 0
+
+Checkpoint 4:
+-- syscall_functions.c -- Pari
+    I confused he hex value of 128MB, neglected to add a 0 which made getvidmap point to 8MB instead at first. bruh moment.
+
+-- term.c -- George
+    I created a separate vid buffer to write to before actually updating video memory. This caused problems in fish because the "video" erased itself from screen after done executing. Fixed by directly writing to video memory instead.
+
+-- paging.c -- Aadi
+    I hadnt updated my naive implementation of setting my PTE from cp1 which only set PT0. thus when i updated the PT for vidmap, it was not working. Fixed by passing in a pointer to my page tables when setting it in my helper function
+
+Checkpoint 5:
+-- pit.c term.c -- Pari and Aadi
+    Failed to consider that 0xb8000 may not always point to physical address 0xb8000, so in terminal switch when we were copying from b8 to a background buffer,
+    we were actually just copying from one background buffer to another. Caused terminal switch to not work as intended. This also affected the typing of characters to screen, because we want 
+    those to always be printed to the terminal on screen, not the terminal that is currently in the scheduler
+    FIX: we created a new page 0xb7000 to always point to physical mem 0xb8000, which we can use instead of b8000
+
+-- pit.c -- Pari and Aadi
+    Did not update this_pcb variable when we were context switching, which affected syscall_read and syscall_write.  caused fish and pingpong
+    to increase to 1024Hz whenever a simulatenously running process on a different terminal halted
+
+-- term.c lib.c -- Aadi
+    When 3 shells are running, and waiting for an input, we do not know which shell reads it and which terminal it prints to
+    FIX: updated keyboard handler and added a new screen_putc function that would read and print user input to the visible term
+
+-- syscall_functions.c -- George
+    Accidentally assigned pids to garbage input
+    FIX: shifted PID assignment to after checking if executable is valid
+

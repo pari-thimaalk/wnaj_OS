@@ -1,0 +1,30 @@
+ass_link_handler.o: ass_link_handler.S
+boot.o: boot.S multiboot.h x86_desc.h types.h
+paging_ass.o: paging_ass.S
+x86_desc.o: x86_desc.S x86_desc.h types.h
+e_handler.o: e_handler.c e_handler.h lib.h types.h ass_link_handler.h \
+  kbd.h i8259.h rtc.h syscall_functions.h x86_desc.h filesystem.h \
+  paging.h paging_ass.h term.h
+filesystem.o: filesystem.c filesystem.h types.h lib.h
+i8259.o: i8259.c i8259.h types.h lib.h
+idt.o: idt.c idt.h x86_desc.h types.h e_handler.h lib.h \
+  ass_link_handler.h kbd.h i8259.h rtc.h
+kbd.o: kbd.c kbd.h types.h lib.h i8259.h term.h signals.h
+kernel.o: kernel.c multiboot.h types.h x86_desc.h lib.h i8259.h debug.h \
+  tests.h idt.h e_handler.h rtc.h kbd.h paging.h paging_ass.h \
+  filesystem.h syscall_functions.h term.h mouse.h pit.h signals.h
+lib.o: lib.c lib.h types.h term.h paging.h paging_ass.h x86_desc.h
+mouse.o: mouse.c mouse.h lib.h types.h i8259.h term.h rtc.h
+paging.o: paging.c paging.h paging_ass.h types.h x86_desc.h
+pit.o: pit.c pit.h types.h lib.h i8259.h term.h filesystem.h \
+  syscall_functions.h x86_desc.h paging.h paging_ass.h
+rtc.o: rtc.c rtc.h lib.h types.h i8259.h term.h
+signals.o: signals.c signals.h term.h types.h lib.h syscall_functions.h \
+  x86_desc.h filesystem.h paging.h paging_ass.h
+syscall_functions.o: syscall_functions.c syscall_functions.h types.h \
+  lib.h x86_desc.h filesystem.h paging.h paging_ass.h term.h rtc.h \
+  i8259.h signals.h
+term.o: term.c term.h types.h lib.h kbd.h i8259.h paging.h paging_ass.h \
+  x86_desc.h
+tests.o: tests.c tests.h x86_desc.h types.h lib.h rtc.h i8259.h kbd.h \
+  term.h filesystem.h
