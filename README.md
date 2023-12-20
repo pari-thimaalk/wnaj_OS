@@ -1,3 +1,20 @@
+WNAJ_OS
+-----
+A Linux-inspired operating system that I built with two classmates whilst taking ECE391 at the University of Illinois, Urbana-Champaign. Our uniprocessor system contains the following features:
+* Interrupt handling via Intel 8259A PIC
+* Virtualized Memory via Paging
+* Device Drivers for keyboard, Real-Time Clock (RTC) and Programmable Interrupt Timer (PIT)
+* File System Driver
+* System Calls to execute user programs and to provide an interface for user-kernel interaction
+* Round-Robin Scheduling between 3 processes to allow "simultaneous" execution of multiple programs, each process accessible via its own terminal
+* (for extra credit) Device Driver for mouse and CMOS
+* (for extra credit) Status bar displaying currently visible process number and current time (CT) (and some interesting status messages upon mouse clicks!)
+
+For development and testing, we used QEMU to emulate the processor and various hardware components.
+
+University Academic Integrity and Copyright statement below.
+
+
 ACADEMIC INTEGRITY
 -----
 Please review the University of Illinois Student Code before starting,
