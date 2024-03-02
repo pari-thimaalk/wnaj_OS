@@ -1,6 +1,6 @@
 WNAJ_OS
 -----
-A Linux-inspired operating system that I built with two classmates whilst taking ECE391 at the University of Illinois, Urbana-Champaign. Our uniprocessor system contains the following features:
+A Linux-inspired x86-operating system that I built with two classmates whilst taking ECE391 at the University of Illinois, Urbana-Champaign. Our uniprocessor system contains the following features:
 * Interrupt handling via Intel 8259A PIC
 * Virtualized Memory via Paging
 * Device Drivers for keyboard, Real-Time Clock (RTC) and Programmable Interrupt Timer (PIT)
